@@ -36,9 +36,7 @@ def generate_insights():
         
         coef_df = pd.read_csv(os.path.join(models_dir, 'coefficients.csv'))
         
-        
         insights = []
-        
         
         lag_coef = coef_df.loc[coef_df['Feature'] == 'Data_Lag1', 'Coefficient'].values[0]
         diff_coef = coef_df.loc[coef_df['Feature'] == 'Data_Diff', 'Coefficient'].values[0]
@@ -61,10 +59,17 @@ def generate_insights():
             "directional_accuracy": dir_acc
         }
         
+        coef_dict = coef_df.to_dict(orient='records')
+        for item in coef_dict:
+            if item['Feature'] == 'Data_Lag1':
+                item['Explanation'] = "Absolute Level (Gravity Effect) - Higher rates typically push prices down"
+            elif item['Feature'] == 'Data_Diff':
+                item['Explanation'] = "Rate of Change (Momentum) - Immediate changes add pressure"
+                
         output = {
             "metrics": metrics,
             "insights": insights,
-            "coefficients": coef_df.to_dict(orient='records')
+            "coefficients": coef_dict
         }
         
         output_path = os.path.join(models_dir, 'evaluation.json')

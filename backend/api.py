@@ -8,7 +8,6 @@ import joblib
 
 app = FastAPI(title="Lagged Price Forecast API")
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], 
@@ -16,7 +15,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODELS_DIR = os.path.join(BASE_DIR, "models")
@@ -61,8 +59,6 @@ def get_history():
         
         from preprocessing import load_and_process_data
         df = load_and_process_data()
-        
-        
         
         return df[['Date', 'Price', 'Data']].to_dict(orient="records")
     except Exception as e:

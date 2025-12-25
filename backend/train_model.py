@@ -8,16 +8,15 @@ import os
 from preprocessing import load_and_process_data
 
 def train():
-   
     print("Loading data..")
     df = load_and_process_data()
     
-    features = ['Data_Lag1', 'Data_Diff', 'Data_Pct_Change']
-    target = 'Price'
+    # Updated Features and Target
+    features = ['Data_Lag1', 'Data_Diff']
+    target = 'Price_Diff'
     
     X = df[features]
     y = df[target]
-    
     
     split_idx = int(len(df) * 0.8)
     
@@ -28,23 +27,28 @@ def train():
     
     print(f"Train size: {len(X_train)}, Test size: {len(X_test)}")
     
-
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
     
-    
     model = LinearRegression()
     model.fit(X_train_scaled, y_train)
     
-        
-    y_pred = model.predict(X_test_scaled)
-    mse = mean_squared_error(y_test, y_pred)
-    r2 = r2_score(y_test, y_pred)
+    y_pred_diff = model.predict(X_test_scaled)
     
-    print(f"Model Trained. MSE: {mse:.4f}, R2: {r2:.4f}")
+    price_lag1_test = df.iloc[split_idx:]['Price_Lag1']
+    y_pred_price = price_lag1_test + y_pred_diff
+    y_actual_price = df.iloc[split_idx:]['Price']
+
+    mse = mean_squared_error(y_actual_price, y_pred_price)
+    r2 = r2_score(y_actual_price, y_pred_price)
     
+    actual_diff = df.iloc[split_idx:]['Price_Diff']
+    directional_accuracy = np.mean(np.sign(y_pred_diff) == np.sign(actual_diff)) * 100
     
+    print(f"Model Trained. MSE: {mse:.4f}, R2: {r2:.4f}, Directional Acc: {directional_accuracy:.2f}%")
+    
+    # Save Model and Artifacts
     base_dir = os.path.dirname(os.path.abspath(__file__))
     models_dir = os.path.join(base_dir, 'models')
     os.makedirs(models_dir, exist_ok=True)
@@ -52,13 +56,21 @@ def train():
     joblib.dump(model, os.path.join(models_dir, 'linear_regression_model.joblib'))
     joblib.dump(scaler, os.path.join(models_dir, 'scaler.joblib'))
     
+    import json
+    evaluation_metrics = {
+        "mse": mse,
+        "r2": r2,
+        "directional_accuracy": directional_accuracy
+    }
     
+    with open(os.path.join(models_dir, 'evaluation.json'), 'w') as f:
+        json.dump(evaluation_metrics, f)
+
     test_results = X_test.copy()
-    test_results['Actual_Price'] = y_test
-    test_results['Predicted_Price'] = y_pred
+    test_results['Actual_Price'] = y_actual_price
+    test_results['Predicted_Price'] = y_pred_price
     test_results['Date'] = df.iloc[split_idx:]['Date']
     test_results.to_csv(os.path.join(models_dir, 'test_results.csv'), index=False)
-    
     
     coef_df = pd.DataFrame({
         'Feature': features,
