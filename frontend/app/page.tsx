@@ -56,7 +56,6 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen bg-[#f0f0f0] p-4 md:p-8 font-mono">
-      {/* Header */}
       <header className="mb-8 border-b-4 border-black pb-4">
         <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-black flex items-center gap-4">
           <Activity className="w-10 h-10 md:w-12 md:h-12" />
@@ -67,7 +66,6 @@ export default function Dashboard() {
         </p>
       </header>
 
-      {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <MetricCard
           title="Model Accuracy (R²)"
@@ -91,10 +89,8 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {/* Chart Section */}
         <div className="lg:col-span-2 bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-lg p-6 h-[500px]">
           <h3 className="text-xl font-black uppercase mb-4 flex items-center gap-2">
             <TrendingUp className="w-6 h-6" /> Price Forecast
@@ -102,10 +98,8 @@ export default function Dashboard() {
           <PriceChart data={predictions} />
         </div>
 
-        {/* Insights Section */}
         <div className="space-y-6">
 
-          {/* AI Insights Panel */}
           <div className="bg-yellow-100 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-lg p-6">
             <h3 className="text-xl font-black uppercase mb-4 border-b-2 border-black pb-2">
               Model Insights
@@ -113,7 +107,7 @@ export default function Dashboard() {
             <ul className="space-y-4">
               {metrics.insights.map((insight: string, idx: number) => (
                 <li key={idx} className="flex items-start gap-3 text-sm font-bold text-gray-800">
-                  <span className="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-xs mt-0.5">
+                  <span className="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center shrink-0 text-xs mt-0.5">
                     {idx + 1}
                   </span>
                   {insight}
@@ -122,7 +116,6 @@ export default function Dashboard() {
             </ul>
           </div>
 
-          {/* Coefficients Panel */}
           <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-lg p-6">
             <h3 className="text-lg font-black uppercase mb-4">Feature Importance</h3>
             <div className="space-y-3">
@@ -134,12 +127,17 @@ export default function Dashboard() {
                       {c.Coefficient > 0 ? '+' : ''}{c.Coefficient.toFixed(4)}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden mb-2">
                     <div
                       className={`h-full ${c.Coefficient > 0 ? 'bg-green-500' : 'bg-red-500'}`}
                       style={{ width: `${Math.min(Math.abs(c.Coefficient) * 20, 100)}%` }} // Rough scaling for visual
                     ></div>
                   </div>
+                  {c.Explanation && (
+                    <p className="text-xs text-gray-600 italic">
+                      {c.Explanation}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
