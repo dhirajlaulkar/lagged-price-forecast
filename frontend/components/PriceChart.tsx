@@ -68,7 +68,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ data }) => {
                 labels: {
                     font: {
                         family: 'monospace',
-                        weight: 'bold'
+                        weight: 'bold' as const
                     },
                     color: '#000'
                 }

@@ -77,8 +77,3 @@ lagged-price-forecast/
 └── README.md
 ```
 
-## ✅ Constraints Checklist
-- [x] No deep learning models.
-- [x] No future data leakage (Time-based split).
-- [x] Clean, interpretable visualizations.
-- [x] Production-ready modular code.
