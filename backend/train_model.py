@@ -1,0 +1,72 @@
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_squared_error, r2_score
+import joblib
+import os
+from preprocessing import load_and_process_data
+
+def train():
+   
+    print("Loading data..")
+    df = load_and_process_data()
+    
+    features = ['Data_Lag1', 'Data_Diff', 'Data_Pct_Change']
+    target = 'Price'
+    
+    X = df[features]
+    y = df[target]
+    
+    
+    split_idx = int(len(df) * 0.8)
+    
+    X_train = X.iloc[:split_idx]
+    y_train = y.iloc[:split_idx]
+    X_test = X.iloc[split_idx:]
+    y_test = y.iloc[split_idx:]
+    
+    print(f"Train size: {len(X_train)}, Test size: {len(X_test)}")
+    
+
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+    
+    
+    model = LinearRegression()
+    model.fit(X_train_scaled, y_train)
+    
+        
+    y_pred = model.predict(X_test_scaled)
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+    
+    print(f"Model Trained. MSE: {mse:.4f}, R2: {r2:.4f}")
+    
+    
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    models_dir = os.path.join(base_dir, 'models')
+    os.makedirs(models_dir, exist_ok=True)
+    
+    joblib.dump(model, os.path.join(models_dir, 'linear_regression_model.joblib'))
+    joblib.dump(scaler, os.path.join(models_dir, 'scaler.joblib'))
+    
+    
+    test_results = X_test.copy()
+    test_results['Actual_Price'] = y_test
+    test_results['Predicted_Price'] = y_pred
+    test_results['Date'] = df.iloc[split_idx:]['Date']
+    test_results.to_csv(os.path.join(models_dir, 'test_results.csv'), index=False)
+    
+    
+    coef_df = pd.DataFrame({
+        'Feature': features,
+        'Coefficient': model.coef_
+    })
+    coef_df.to_csv(os.path.join(models_dir, 'coefficients.csv'), index=False)
+    
+    print(f"Artifacts saved to {models_dir}")
+
+if __name__ == "__main__":
+    train()
