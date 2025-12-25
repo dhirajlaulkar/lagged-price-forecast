@@ -1,26 +1,24 @@
 {
     "metrics": {
-        "mse": 41851372.76179073,
-        "r2": -107.92370436396546,
-        "directional_accuracy": 47.43083003952569
+        "mse": 2343.981709847759,
+        "r2": 0.9938994791819327,
+        "directional_accuracy": 47.299077733860344
     },
     "insights": [
-        "Model explains -10792.4% of the variance in stock prices.",
+        "Model explains 99.4% of the variance in stock prices.",
         "The raw level of the data is a stronger predictor than recent changes.",
-        "Positive changes in the data signal correlate with higher stock prices (positive correlation)."
+        "Positive changes in the data signal tend to pull the stock price down (negative correlation)."
     ],
     "coefficients": [
         {
             "Feature": "Data_Lag1",
-            "Coefficient": -825.0064999334431
+            "Coefficient": -0.3497410845796392,
+            "Explanation": "Absolute Level (Gravity Effect) - Higher rates typically push prices down"
         },
         {
             "Feature": "Data_Diff",
-            "Coefficient": 17.21827103320762
-        },
-        {
-            "Feature": "Data_Pct_Change",
-            "Coefficient": 0.2376996036086396
+            "Coefficient": -0.1848807272319688,
+            "Explanation": "Rate of Change (Momentum) - Immediate changes add pressure"
         }
     ]
 }

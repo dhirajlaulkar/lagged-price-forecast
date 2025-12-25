@@ -40,14 +40,12 @@ def load_and_process_data(data_path='../data/Data.csv', price_path='../data/Stoc
                 
     df['Data_Lag1'] = df['Data'].shift(1)
     
-    
     df['Data_Lag2'] = df['Data'].shift(2)
 
-    
     df['Data_Diff'] = df['Data_Lag1'] - df['Data_Lag2']
 
-    
-    df['Data_Pct_Change'] = (df['Data_Diff'] / df['Data_Lag2']) * 100
+    df['Price_Lag1'] = df['Price'].shift(1)
+    df['Price_Diff'] = df['Price'] - df['Price_Lag1']
 
     
     df = df.dropna().reset_index(drop=True)
