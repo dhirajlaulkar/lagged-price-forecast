@@ -34,5 +34,16 @@ Automated analysis of the model coefficients reveals:
 2.  **Negative Correlation**: Both the absolute level (`Coef: -0.35`) and the rate of change (`Coef: -0.18`) have a negative impact on price. This suggests that as the "Data" variable (e.g., Interest Rates) rises, the Stock Price falls.
 3.  **Regime Handling**: By modeling price *differences*, the system successfully adapts to new execution regimes (e.g., 2024-2025) even when the underlying data values are significantly higher than the training period (2010-2023).
 
----
-*Note: A Next.js frontend is included in the `frontend/` directory solely for visualization purposes, providing an interactive dashboard to view the forecast against actual historical performance.*
+## Usage
+To replicate the analysis and generate visualizations:
+
+```bash
+# Install dependencies
+pip install -r backend/requirements.txt
+
+# Train framework
+python backend/train_model.py
+
+# Generate EDA Plots (saved to backend/plots/)
+python backend/eda.py
+```
