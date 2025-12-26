@@ -52,19 +52,4 @@ def load_and_process_data(data_path='../data/Data.csv', price_path='../data/Stoc
 
     return df
 
-if __name__ == "__main__":
-    # Test execution
-    try:
-        df = load_and_process_data()
-        print("Data processed successfully.")
-        print(f"Shape: {df.shape}")
-        print("\nFirst 5 rows:")
-        print(df.head())
-        print("\nLast 5 rows:")
-        print(df.tail())
-        
-        
-        df.to_csv("debug_processed_data.csv", index=False)
-        print("\nSaved debug_processed_data.csv")
-    except Exception as e:
-        print(f"Error during processing: {e}")
+

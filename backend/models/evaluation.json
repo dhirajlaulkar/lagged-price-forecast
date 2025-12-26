@@ -2,7 +2,7 @@
     "metrics": {
         "mse": 2343.981709847759,
         "r2": 0.9938994791819327,
-        "directional_accuracy": 47.299077733860344
+        "directional_accuracy": 46.973684210526315
     },
     "insights": [
         "Model explains 99.4% of the variance in stock prices.",
@@ -12,12 +12,12 @@
     "coefficients": [
         {
             "Feature": "Data_Lag1",
-            "Coefficient": -0.3497410845796392,
+            "Coefficient": -0.34974108457963926,
             "Explanation": "Absolute Level (Gravity Effect) - Higher rates typically push prices down"
         },
         {
             "Feature": "Data_Diff",
-            "Coefficient": -0.1848807272319688,
+            "Coefficient": -0.18488072723196886,
             "Explanation": "Rate of Change (Momentum) - Immediate changes add pressure"
         }
     ]
